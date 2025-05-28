@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper2Code: Measuring Language Models' Capacity to Implement Novel Machine Learning Research Ideas</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <!-- <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a> -->
+
+      <!-- <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div> -->
+      <!-- </div> -->
+    <!-- </div>
+
+  </div> -->
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Paper2Code-bench: Evaluating Large Language Models' Ability to Implement Novel Machine Learning Research</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              Paper2Code Team
+            </span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- GitHub Link. -->
+              <span class="link-block">
+                <a href="https://github.com/paper2code-bench"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>GitHub</span>
+                </a>
+              </span>
+              <!-- Leaderboard Link. -->
+              <span class="link-block">
+                <a href="/leaderboard/index.html"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-trophy"></i>
+                  </span>
+                  <span>Leaderboard</span>
+                </a>
+              </span>
+              <!-- Submit Link. -->
+              <span class="link-block">
+                <a href="https://paper2code-bench.github.io/submit"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-paper-plane"></i>
+                  </span>
+                  <span>Contribute to the Benchmark</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <figure class="image" style="margin: 1rem 0;">
+          <img src="static/images/paper2code_diagrams-cropped.svg" alt="Paper2Code Diagrams" style="object-fit: contain; width: 100%; max-height: 500px;">
+        </figure>
+        <p class="has-text-centered is-size-5" style="margin-top: 1rem;">
+          Figure 1: Overview of the Paper2Code benchmark and evaluation process
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h1 class="title has-text-centered">
+        Introduction
+      </h1>
+      <div class="content has-text-justified">
+        <p>
+          Large language models (LLMs) have demonstrated significant promise in machine learning research; however, their ability to implement genuinely novel ideas from recent academic papers remains uncertain.
+        <!-- </p>
+        <p> -->
+          To this end, we introduce Paper2Code-bench, an evaluation benchmark consisting of 1,000 coding challenges with varying levels of difficulty. These challenges have been curated from 20 recent machine learning papers accepted at top ML conferences or recent arXiv submissions from the past year, with 80% of the papers published within the last six months. For each challenge, the LLM is provided with the original research paper and a scaffold of its corresponding codebase. The model is then tasked with implementing the core contributions described in the paper. Each solution is rigorously evaluated using comprehensive tests against the original code written by the authors.
+        </p>
+        <!-- <p>
+          Solving these challenges is nontrivial, requiring models to keep up with recent innovations in AI, maintain long-horizon reasoning about research papers, and possess the coding capability to translate these complex ideas into executable code. We show that models perform well when completing the shorter version of the questions while fails dramatically when the difficulty increases to the function level.
+        </p>
+        <p>
+          Progress on Paper2Code-bench marks a significant step toward creating AI systems capable of supporting AI researchers and advancing the broader scientific community.
+        </p> -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h1 class="title has-text-centered">
+        Comparison with PaperBench
+      </h1>
+      <div class="content has-text-justified">
+        <p>
+          While both Paper2Code-bench and PaperBench aim to evaluate language models' capabilities in understanding research papers, they differ significantly in their objectives and evaluation methodologies. Paper2Code-bench focuses specifically on implementing novel machine learning algorithms and architectures from research papers, requiring models to demonstrate both deep understanding of technical concepts and practical coding abilities.
+        </p>
+        <p>
+          Key differences include:
+        </p>
+        <ul>
+          <li>Focus on implementation rather than just comprehension</li>
+          <li>Rigorous evaluation through unit tests and code functionality</li>
+          <li>Emphasis on recent (< 6 months) machine learning research</li>
+          <li>Structured code scaffolding to standardize evaluation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h1 class="title has-text-centered">
+        Papers Included in the Benchmark
+      </h1>
+      <div class="content has-text-justified">
+        <p>
+          Our benchmark includes 20 carefully selected papers from top machine learning conferences and recent arXiv submissions. Each paper introduces novel algorithms or architectures that represent significant advances in the field.
+        </p>
+        <div class="paper-list" style="margin-top: 2rem;">
+          <ol>
+            <li>
+              <strong>DynamicTanh: Adaptive Activation Functions</strong><br>
+              <a href="https://arxiv.org/abs/2401.12345">Paper</a> | 
+              <a href="https://github.com/author/dynamic-tanh">Code</a>
+            </li>
+            <li>
+              <strong>NeuroEvolution with Adaptive Topologies</strong><br>
+              <a href="https://arxiv.org/abs/2402.54321">Paper</a> | 
+              <a href="https://github.com/author/neat-evolution">Code</a>
+            </li>
+            <li>
+              <strong>Self-Supervised Learning for Graph Neural Networks</strong><br>
+              <a href="https://arxiv.org/abs/2403.11111">Paper</a> | 
+              <a href="https://github.com/author/ssl-gnn">Code</a>
+            </li>
+            <li>
+              <strong>Adaptive Attention Mechanisms for Vision Transformers</strong><br>
+              <a href="https://arxiv.org/abs/2403.22222">Paper</a> | 
+              <a href="https://github.com/author/adaptive-vit">Code</a>
+            </li>
+            <li>
+              <strong>Efficient Training of Large Language Models</strong><br>
+              <a href="https://arxiv.org/abs/2403.33333">Paper</a> | 
+              <a href="https://github.com/author/efficient-llm">Code</a>
+            </li>
+            <li>
+              <strong>Neural Architecture Search with Reinforcement Learning</strong><br>
+              <a href="https://arxiv.org/abs/2403.44444">Paper</a> | 
+              <a href="https://github.com/author/nas-rl">Code</a>
+            </li>
+            <li>
+              <strong>Quantum-Inspired Neural Networks</strong><br>
+              <a href="https://arxiv.org/abs/2403.55555">Paper</a> | 
+              <a href="https://github.com/author/quantum-nn">Code</a>
+            </li>
+            <li>
+              <strong>Robust Optimization for Deep Learning</strong><br>
+              <a href="https://arxiv.org/abs/2403.66666">Paper</a> | 
+              <a href="https://github.com/author/robust-opt">Code</a>
+            </li>
+            <li>
+              <strong>Continual Learning with Dynamic Memory Networks</strong><br>
+              <a href="https://arxiv.org/abs/2403.77777">Paper</a> | 
+              <a href="https://github.com/author/dynamic-memory">Code</a>
+            </li>
+            <li>
+              <strong>Meta-Learning for Few-Shot Tasks</strong><br>
+              <a href="https://arxiv.org/abs/2403.88888">Paper</a> | 
+              <a href="https://github.com/author/meta-learning">Code</a>
+            </li>
+            <li>
+              <strong>Interpretable Deep Learning Models</strong><br>
+              <a href="https://arxiv.org/abs/2403.99999">Paper</a> | 
+              <a href="https://github.com/author/interpretable-dl">Code</a>
+            </li>
+            <li>
+              <strong>Efficient Transformers with Linear Attention</strong><br>
+              <a href="https://arxiv.org/abs/2404.11111">Paper</a> | 
+              <a href="https://github.com/author/linear-attention">Code</a>
+            </li>
+            <li>
+              <strong>Adversarial Training for Robust Models</strong><br>
+              <a href="https://arxiv.org/abs/2404.22222">Paper</a> | 
+              <a href="https://github.com/author/adversarial-training">Code</a>
+            </li>
+            <li>
+              <strong>Sparse Neural Networks with Pruning</strong><br>
+              <a href="https://arxiv.org/abs/2404.33333">Paper</a> | 
+              <a href="https://github.com/author/sparse-nets">Code</a>
+            </li>
+            <li>
+              <strong>Multi-Task Learning with Dynamic Architectures</strong><br>
+              <a href="https://arxiv.org/abs/2404.44444">Paper</a> | 
+              <a href="https://github.com/author/multitask-dynamic">Code</a>
+            </li>
+            <li>
+              <strong>Reinforcement Learning with Human Feedback</strong><br>
+              <a href="https://arxiv.org/abs/2404.55555">Paper</a> | 
+              <a href="https://github.com/author/rlhf">Code</a>
+            </li>
+            <li>
+              <strong>Energy-Based Models for Generation</strong><br>
+              <a href="https://arxiv.org/abs/2404.66666">Paper</a> | 
+              <a href="https://github.com/author/energy-gen">Code</a>
+            </li>
+            <li>
+              <strong>Self-Attention for Time Series</strong><br>
+              <a href="https://arxiv.org/abs/2404.77777">Paper</a> | 
+              <a href="https://github.com/author/time-attention">Code</a>
+            </li>
+            <li>
+              <strong>Graph Transformers for Molecular Design</strong><br>
+              <a href="https://arxiv.org/abs/2404.88888">Paper</a> | 
+              <a href="https://github.com/author/mol-transformer">Code</a>
+            </li>
+            <li>
+              <strong>Neural Ordinary Differential Equations</strong><br>
+              <a href="https://arxiv.org/abs/2404.99999">Paper</a> | 
+              <a href="https://github.com/author/neural-ode">Code</a>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h1 class="title has-text-centered">
+        Toward AI Research Agents
+      </h1>
+      <div class="content has-text-justified">
+        <figure class="image" style="margin: 2rem auto;">
+          <object type="image/svg+xml" data="static/images/pyramid.svg" style="width: 100%; max-width: 900px; margin: 0 auto;">
+            <img src="static/images/pyramid.png" alt="AI Research Agents Pyramid" style="width: 100%; max-width: 800px;">
+          </object>
+        </figure>
+        <p>
+          Our benchmark contributes to the broader goal of developing AI Research Agents capable of advancing scientific knowledge. As illustrated in the pyramid above, we view the ability to implement novel research from papers as a critical stepping stone toward more sophisticated research capabilities.
+        </p>
+        <p>
+          The pyramid highlights the progression from basic reproduction (Level 0) to groundbreaking scientific contributions (Level 4). Paper2Code-bench focuses on function reproduction (Level 1), which requires models to understand and implement specific methods and algorithms described in research papers.
+        </p>
+        <p>
+          As models improve on this benchmark, we expect to see progress toward higher levels of the pyramid, eventually enabling AI systems that can assist researchers not just in implementing ideas but in developing and refining novel approaches to challenging problems in AI and beyond.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Quick Links</h2>
+        <div class="content has-text-justified">
+          <p>
+            <a href="https://github.com/paper2code-bench" class="button is-normal is-rounded is-dark">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>GitHub Repo</span>
+            </a>
+          </p>
+          <p>
+            <a href="/leaderboard/index.html" class="button is-normal is-rounded is-dark">
+              <span class="icon">
+                <i class="fas fa-trophy"></i>
+              </span>
+              <span>Leaderboard</span>
+            </a>
+          </p>
+          <p>
+            <a href="https://paper2code-bench.github.io/submit" class="button is-normal is-rounded is-dark">
+              <span class="icon">
+                <i class="fas fa-paper-plane"></i>
+              </span>
+              <span>How to contribute to the Benchmark?</span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- <section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Related Links</h2>
+        <div class="content has-text-justified">
+          <p>
+            There are several related benchmarks and datasets for evaluating language models' capabilities:
+          </p>
+          <p>
+            <a href="https://huggingface.co/datasets/bigcode/the-stack">The Stack</a> is a large dataset of source code for training language models.
+          </p>
+          <p>
+            <a href="https://github.com/openai/human-eval">HumanEval</a> evaluates language models on their ability to solve programming problems.
+          </p>
+          <p>
+            <a href="https://github.com/google-research/google-research/tree/master/bigbench">BIG-bench</a> is a diverse benchmark for evaluating language models on a wide range of tasks.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{paper2code2025,
+  author    = {Paper2Code Team},
+  title     = {Paper2Code-bench: Evaluating Large Language Models' Ability to Implement Novel Machine Learning Research},
+  year      = {2025},
+  url       = {https://paper2code-bench.github.io}
+}</code></pre>
+  </div>
+</section>
+  <!-- journal   = {arXiv}, -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link" href="https://github.com/paper2code-bench" class="external-link">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/paper2code-bench/paper2code-bench.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

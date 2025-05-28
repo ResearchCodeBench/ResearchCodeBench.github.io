@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Paper2Code Performance by Paper</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: "Google Sans", "Noto Sans", sans-serif;
+            padding: 20px;
+        }
+
+        .score-bar {
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .score-fill {
+            height: 100%;
+            border-radius: 4px;
+            background-color: #4caf50;
+        }
+
+        .external-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .button.is-normal {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .button.is-normal:hover {
+            background-color: #666;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .link-block {
+            margin: 0 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Detailed Performance Analysis by Paper</h1>
+        <div class="text-center mb-4">
+            <span class="link-block">
+                <a href="../index.html" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fas fa-arrow-left"></i>
+                    </span>
+                    <span>Back to Overall Leaderboard</span>
+                </a>
+            </span>
+        </div>
+        <div id="leaderboard"></div>
+    </div>
+
+    <script>
+        fetch('../data/overall_stats.json')
+            .then(response => response.json())
+            .then(data => {
+                const leaderboard = document.getElementById('leaderboard');
+                const results = data.results;
+
+                // Process each paper's results
+                Object.entries(results).forEach(([paperId, paperData]) => {
+                    const paperDiv = document.createElement('div');
+                    paperDiv.className = 'card mb-4';
+
+                    // Paper header
+                    const paperHeader = document.createElement('div');
+                    paperHeader.className = 'card-header';
+                    paperHeader.innerHTML = `
+                        <h3>${paperData.paper_metadata.title}</h3>
+                        <p class="mb-0">
+                            <a href="${paperData.paper_metadata.arxiv_abs}" target="_blank">arXiv</a> | 
+                            <a href="${paperData.paper_metadata.github_url}" target="_blank">GitHub</a>
+                        </p>
+                    `;
+                    paperDiv.appendChild(paperHeader);
+
+                    // Create table
+                    const table = document.createElement('table');
+                    table.className = 'table table-striped';
+                    table.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Model</th>
+                                <th>Pass Rate</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    `;
+
+                    // Calculate scores for all models
+                    const modelScores = Object.entries(paperData.results).map(([modelName, modelData]) => {
+                        let totalTasks = 0;
+                        let passedTasks = 0;
+
+                        Object.entries(modelData.results).forEach(([taskId, taskResults]) => {
+                            taskResults.forEach(result => {
+                                totalTasks++;
+                                if (result.passed) {
+                                    passedTasks++;
+                                }
+                            });
+                        });
+
+                        const passRate = totalTasks > 0 ? (passedTasks / totalTasks) * 100 : 0;
+                        return { modelName, passRate };
+                    });
+
+                    // Sort models by score in descending order
+                    modelScores.sort((a, b) => b.passRate - a.passRate);
+
+                    // Add sorted models to table
+                    const tbody = table.querySelector('tbody');
+                    modelScores.forEach((model, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${model.modelName}</td>
+                            <td>
+                                <div class="score-bar">
+                                    <div class="score-fill" style="width: ${model.passRate}%"></div>
+                                </div>
+                            </td>
+                            <td>${model.passRate.toFixed(1)}%</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    paperDiv.appendChild(table);
+                    leaderboard.appendChild(paperDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading data:', error);
+                document.getElementById('leaderboard').innerHTML = `
+                    <div class="alert alert-danger">
+                        Error loading leaderboard data. Please try again later.
+                    </div>
+                `;
+            });
+    </script>
+</body>
+
+</html>

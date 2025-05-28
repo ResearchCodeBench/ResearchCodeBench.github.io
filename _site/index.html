@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Paper2Code: Measuring Language Models' Capacity to Implement Novel Machine Learning Research Ideas">
+  <meta name="keywords" content="Paper2Code, ML, LLM, Research">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper2Code: Measuring Language Models' Capacity to Implement Novel Machine Learning Research Ideas</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title"> Paper2Code-bench: Evaluating Large Language Models' Ability to Implement Novel Machine Learning Research </h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              Paper2Code Team
+            </span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- GitHub Link. -->
+              <span class="link-block">
+                <a href="https://github.com/paper2code-bench"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>GitHub</span>
+                </a>
+              </span>
+              <!-- Leaderboard Link. -->
+              <span class="link-block">
+                <a href="/leaderboard/index.html"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-trophy"></i>
+                  </span>
+                  <span>Leaderboard</span>
+                </a>
+              </span>
+              <!-- Blog Link. -->
+              <span class="link-block">
+                <a href="/blog/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-book"></i>
+                  </span>
+                  <span>Blog</span>
+                </a>
+              </span>
+              <!-- Submit Link. -->
+              <span class="link-block">
+                <a href="https://paper2code-bench.github.io/submit"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-paper-plane"></i>
+                  </span>
+                  <span>Contribute to the Benchmark</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <figure class="image" style="margin: 1rem 0;">
+          <img src="static/images/paper2code_diagrams-cropped.svg" alt="Paper2Code Diagrams" style="object-fit: contain; width: 100%; max-height: 500px;">
+        </figure>
+        <p class="has-text-centered is-size-5" style="margin-top: 1rem;">
+          Figure 1: Overview of the Paper2Code benchmark and evaluation process
+        </p>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<section class="content">
+  <div class="container is-max-desktop">
+    <p style="text-align: center;"><img src="static/images/paper2code_diagrams-cropped.svg" alt="Image" width="100%" style="max-width: 8000px;" /></p>
+<p style="text-align: center;"><em>Figure 1: Overview of the Paper2Code benchmark and evaluation process</em></p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>Large language models (LLMs) have demonstrated significant promise in machine learning research; however, their ability to implement genuinely novel ideas from recent academic papers remains uncertain. To address this gap, we introduce Paper2Code, a coding benchmark designed to evaluate LLMs on their capability to translate concepts from top-tier conference papers into executable code.</p>
+
+<p>To this end, we introduce Paper2Code-bench, an evaluation benchmark consisting of 1,000 coding challenges with varying levels of difficulty. These challenges have been curated from 20 recent machine learning papers accepted at top ML conferences or recent arXiv submissions from the past year, with 80% of the papers published within the last six months. For each challenge, the LLM is provided with the original research paper and a scaffold of its corresponding codebase. The model is then tasked with implementing the core contributions described in the paper. Each solution is rigorously evaluated using comprehensive tests against the original code written by the authors.</p>
+
+<h2 id="comparison-with-paperbench">Comparison with PaperBench</h2>
+
+<p>While both Paper2Code-bench and PaperBench aim to evaluate language models’ capabilities in understanding research papers, they differ significantly in their objectives and evaluation methodologies. Paper2Code-bench focuses specifically on implementing novel machine learning algorithms and architectures from research papers, requiring models to demonstrate both deep understanding of technical concepts and practical coding abilities.</p>
+
+<p>Key differences include:</p>
+<ul>
+  <li>Focus on implementation rather than just comprehension</li>
+  <li>Rigorous evaluation through unit tests and code functionality</li>
+  <li>Emphasis on recent (&lt; 6 months) machine learning research</li>
+  <li>Structured code scaffolding to standardize evaluation</li>
+</ul>
+
+<p><img src="static/images/pyramid.svg" alt="Pyramid" /></p>
+
+<h2 id="papers-included-in-the-benchmark">Papers Included in the Benchmark</h2>
+
+<p>Our benchmark includes 20 carefully selected papers from top machine learning conferences and recent arXiv submissions. Each paper introduces novel algorithms or architectures that represent significant advances in the field.</p>
+
+<p><img src="static/images/code_commits_vs_llm_cutoffs.png" alt="knowledge_cutoff" />
+<img src="static/images/ranking.png" alt="ranking" /></p>
+
+<p><img src="static/images/paper_context.png" alt="context" /></p>
+
+<h2 id="toward-ai-research-agents">Toward AI Research Agents</h2>
+
+<p>Our benchmark contributes to the broader goal of developing AI Research Agents capable of advancing scientific knowledge. We view the ability to implement novel research from papers as a critical stepping stone toward more sophisticated research capabilities.</p>
+
+<p>The progression moves from basic reproduction to groundbreaking scientific contributions. Paper2Code-bench focuses on function reproduction, which requires models to understand and implement specific methods and algorithms described in research papers.</p>
+
+<p>As models improve on this benchmark, we expect to see progress toward enabling AI systems that can assist researchers not just in implementing ideas but in developing and refining novel approaches to challenging problems in AI and beyond.</p>
+
+<h1 id="help-us-grow-paper2code-bench">Help Us Grow Paper2Code-bench!</h1>
+
+<p>We’re looking for recent ML papers with available code to add to our benchmark. Paper2Code-bench is continuously evolving, and we welcome contributions from the research community to expand our collection of papers and implementation challenges.</p>
+
+<p>Help us identify the core contributions within the code that test LLMs’ ability to implement novel ideas. Your expertise will help shape the future of AI evaluation benchmarks.</p>
+
+<h3 id="what-we-need">What We Need:</h3>
+<ul>
+  <li><strong>Paper Link</strong> (arXiv, conference page, etc.)</li>
+  <li><strong>Official GitHub Repository Link</strong></li>
+  <li><strong>Your thoughts on the key code sections/lines to focus on</strong></li>
+</ul>
+
+<h3 id="how-to-submit">How to Submit:</h3>
+<p>You can submit your contribution through our <a href="https://forms.gle/xZarsnAa6a2u43Tr6">online form</a>. Or scan the QR code blow:
+<img src="static/images/qr_code.png" alt="qr_code" width="200px" style="display: block; margin: 0 auto;" /></p>
+
+<h3 id="contributors-get-credited">Contributors Get Credited!</h3>
+<p>All contributors will be acknowledged in our publications and on the official Paper2Code-bench website.</p>
+
+<h4 id="why-your-contribution-matters">Why Your Contribution Matters</h4>
+<p>By contributing to Paper2Code-bench, you’re helping advance the development of AI systems that can understand and implement novel research ideas. This benchmark serves as a critical evaluation tool for measuring progress toward more capable AI research assistants.</p>
+
+<p>Join us in building the future of AI research tools!</p>
+
+<h2 id="list-of-papers">List of papers</h2>
+
+<ol>
+  <li>
+    <p><strong>Advantage Alignment Algorithms</strong><br />
+<a href="https://arxiv.org/abs/2406.14662v3">Paper</a> | <a href="https://github.com/jduquevan/advantage-alignment">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Differential Transformer</strong><br />
+<a href="https://arxiv.org/abs/2410.05258v2">Paper</a> | <a href="https://aka.ms/Diff-Transformer">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Diffusion Model Alignment Using Direct Preference Optimization</strong><br />
+<a href="https://arxiv.org/abs/2311.12908v1">Paper</a> | <a href="https://github.com/SalesforceAIResearch/DiffusionDPO">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Transformers without Normalization</strong><br />
+<a href="https://www.arxiv.org/abs/2503.10622v1">Paper</a> | <a href="https://github.com/jiachenzhu/DyT">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Your ViT is Secretly an Image Segmentation Model</strong><br />
+<a href="https://arxiv.org/abs/2503.19108v1">Paper</a> | <a href="https://github.com/tue-mps/eomt/">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Fractal Generative Models</strong><br />
+<a href="https://arxiv.org/abs/2502.17437v2">Paper</a> | <a href="https://github.com/LTH14/fractalgen">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Gaussian Mixture Flow Matching Models</strong><br />
+<a href="https://arxiv.org/abs/2504.05304v1">Paper</a> | <a href="https://github.com/Lakonik/GMFlow">Code</a></p>
+  </li>
+  <li>
+    <p><strong>GPS: A Probabilistic Distributional Similarity with Gumbel Priors for Set-to-Set Matching</strong><br />
+<a href="https://openreview.net/forum?id=U0SijGsCHJ">Paper</a> | <a href="https://github.com/Zhang-VISLab/ICLR2025-GPS">Code</a></p>
+  </li>
+  <li>
+    <p><strong>On Conformal Isometry of Grid Cells: Learning Distance-Preserving Position Embedding</strong><br />
+<a href="https://arxiv.org/abs/2405.16865v4">Paper</a> | <a href="https://github.com/DehongXu/grid-cell-conformal-isometry">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Attention as a Hypernetwork</strong><br />
+<a href="https://arxiv.org/abs/2406.05816v4">Paper</a> | <a href="https://github.com/smonsays/hypernetwork-attention">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Second-Order Min-Max Optimization with Lazy Hessians</strong><br />
+<a href="https://arxiv.org/abs/2410.09568v1">Paper</a> | <a href="https://github.com/TrueNobility303/LEN">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Mapping the increasing use of LLMs in scientific papers</strong><br />
+<a href="https://arxiv.org/abs/2404.01268v1">Paper</a> | <a href="https://github.com/Weixin-Liang/Mapping-the-Increasing-Use-of-LLMs-in-Scientific-Papers">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Min-p Sampling for Creative and Coherent LLM Outputs</strong><br />
+<a href="https://arxiv.org/abs/2407.01082v4">Paper</a> | <a href="https://github.com/menhguin/minp_paper">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Optimal Stepsize for Diffusion Sampling</strong><br />
+<a href="https://arxiv.org/abs/2503.21774v1">Paper</a> | <a href="https://github.com/bebebe666/OptimalSteps">Code</a></p>
+  </li>
+  <li>
+    <p><strong>REPA-E: Unlocking VAE for End-to-End Tuning with Latent Diffusion Transformers</strong><br />
+<a href="https://arxiv.org/abs/2504.10483v1">Paper</a> | <a href="https://github.com/jduquevan/REPA-E">Code</a></p>
+  </li>
+  <li>
+    <p><strong>The Road Less Scheduled</strong><br />
+<a href="https://arxiv.org/abs/2405.15682v4">Paper</a> | <a href="https://github.com/facebookresearch/schedule_free">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Principal Components Enable A New Language of Images</strong><br />
+<a href="https://arxiv.org/abs/2503.08685v1">Paper</a> | <a href="https://github.com/visual-gen/semanticist">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Data Unlearning in Diffusion Models</strong><br />
+<a href="https://arxiv.org/abs/2503.01034">Paper</a> | <a href="https://github.com/claserken/SISS">Code</a></p>
+  </li>
+  <li>
+    <p><strong>TabDiff: a Mixed-type Diffusion Model for Tabular Data Generation</strong><br />
+<a href="https://arxiv.org/abs/2410.20626v3">Paper</a> | <a href="https://github.com/MinkaiXu/TabDiff">Code</a></p>
+  </li>
+  <li>
+    <p><strong>Robust Weight Initialization for Tanh Neural Networks with Fixed Point Analysis</strong><br />
+<a href="https://arxiv.org/abs/2410.02242v2">Paper</a> | <a href="https://github.com/1HyunwooLee/Tanh-Init">Code</a></p>
+  </li>
+</ol>
+
+  </div>
+</section>
+<section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@article{paper2code2025,
+    author    = {Paper2Code Team},
+    title     = {Paper2Code-bench: Evaluating Large Language Models' Ability to Implement Novel Machine Learning Research},
+    year      = {2025},
+    url       = {https://paper2code-bench.github.io}
+  }</code></pre>
+    </div>
+  </section>
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link" href="https://github.com/paper2code-bench" class="external-link">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/paper2code-bench/paper2code-bench.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html> 
