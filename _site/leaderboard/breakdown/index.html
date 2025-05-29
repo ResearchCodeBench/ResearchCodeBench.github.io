@@ -75,6 +75,7 @@
             .then(data => {
                 const leaderboard = document.getElementById('leaderboard');
                 const results = data.results;
+                const overallScores = data.overall_scores;
 
                 // Process each paper's results
                 Object.entries(results).forEach(([paperId, paperData]) => {
@@ -108,23 +109,11 @@
                         <tbody></tbody>
                     `;
 
-                    // Calculate scores for all models
-                    const modelScores = Object.entries(paperData.results).map(([modelName, modelData]) => {
-                        let totalTasks = 0;
-                        let passedTasks = 0;
-
-                        Object.entries(modelData.results).forEach(([taskId, taskResults]) => {
-                            taskResults.forEach(result => {
-                                totalTasks++;
-                                if (result.passed) {
-                                    passedTasks++;
-                                }
-                            });
-                        });
-
-                        const passRate = totalTasks > 0 ? (passedTasks / totalTasks) * 100 : 0;
-                        return { modelName, passRate };
-                    });
+                    // Fetch scores for all models
+                    const modelScores = Object.entries(paperData.problem_scores).map(([modelName, scoreData]) => ({
+                        modelName: overallScores[modelName]?.llm_cfg?.pretty_name || modelName,
+                        passRate: scoreData.mean
+                    }));
 
                     // Sort models by score in descending order
                     modelScores.sort((a, b) => b.passRate - a.passRate);
