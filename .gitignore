@@ -1,3 +1,4 @@
 .*cache/
 bak/
 .DS_Store
+_site/
