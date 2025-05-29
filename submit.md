@@ -33,7 +33,7 @@ Help us identify the core contributions within the code that test LLMs' ability 
 
 You can submit your contribution through our [**online form**](https://forms.gle/xZarsnAa6a2u43Tr6).
 
-![qr_code](static/images/qr_code.png){:width="200px" style="display: block; margin: 0 auto;"}
+![qr_code](/static/images/qr_code.png){:width="200px" style="display: block; margin: 0 auto;"}
 
 ## What Happens Next?
 
@@ -57,7 +57,7 @@ Join us in building the future of AI research tools!
 
 Have questions about the submission process? Reach out to us:
 
-- **Email**: [contact@researchcodebench.org](mailto:contact@researchcodebench.org)
+- **Email**: [researchcodebench@gmail.com](mailto:researchcodebench@gmail.com)
 - **GitHub**: [github.com/researchcodebench](https://github.com/researchcodebench)
 
 We appreciate your contribution to advancing AI research evaluation! 
