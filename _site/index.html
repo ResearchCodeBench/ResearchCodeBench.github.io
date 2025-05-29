@@ -34,6 +34,55 @@
   <link rel="stylesheet" href="./static/css/index.css">
   <link rel="icon" href="./static/images/favicon.svg">
 
+  <!-- Custom CSS for increased margins -->
+  <style>
+    /* Reduced top margin for hero/title section */
+    .hero .hero-body {
+      padding-top: 1.5rem !important;
+    }
+    
+    /* Increased margins for content sections only, not hero/title */
+    .content .container.is-max-desktop,
+    .section .container.is-max-desktop {
+      max-width: 800px !important;
+    }
+    @media screen and (min-width: 1024px) {
+      .content .container.is-max-desktop,
+      .section .container.is-max-desktop {
+        max-width: 750px !important;
+      }
+    }
+    @media screen and (min-width: 1216px) {
+      .content .container.is-max-desktop,
+      .section .container.is-max-desktop {
+        max-width: 700px !important;
+      }
+    }
+    
+    /* Center all text content */
+    .content h1,
+    .content h2,
+    .content h3,
+    .content h4,
+    .content h5,
+    .content h6 {
+      text-align: center !important;
+    }
+    
+    /* Justify paragraph text for better readability */
+    .content p {
+      text-align: justify !important;
+    }
+    
+    /* Keep lists and code blocks left-aligned for readability */
+    .content ul,
+    .content ol,
+    .content pre,
+    .content code {
+      text-align: left !important;
+    }
+  </style>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
   <script src="./static/js/bulma-carousel.min.js"></script>
@@ -57,7 +106,7 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title"> Paper2Code-bench: Evaluating Large Language Models' Ability to Implement Novel Machine Learning Research </h1>
+          <h1 class="title is-1 publication-title"> ResearchCodeBench: Benchmarking LLMs on Implementing Novel Machine Learning Research Code </h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
               Paper2Code Team
@@ -68,12 +117,21 @@
             <div class="publication-links">
               <!-- GitHub Link. -->
               <span class="link-block">
-                <a href="https://github.com/paper2code-bench"
+                <a href="https://arxiv.org/abs/TODO"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-alt"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/researchcodebench"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fab fa-github"></i>
                   </span>
-                  <span>GitHub</span>
+                  <span>Code</span>
                 </a>
               </span>
               <!-- Leaderboard Link. -->
@@ -87,7 +145,7 @@
                 </a>
               </span>
               <!-- Blog Link. -->
-              <span class="link-block">
+              <!-- <span class="link-block">
                 <a href="/blog/"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
@@ -95,15 +153,15 @@
                   </span>
                   <span>Blog</span>
                 </a>
-              </span>
+              </span> -->
               <!-- Submit Link. -->
               <span class="link-block">
-                <a href="https://paper2code-bench.github.io/submit"
+                <a href="/submit/"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-paper-plane"></i>
                   </span>
-                  <span>Contribute to the Benchmark</span>
+                  <span>Submit</span>
                 </a>
               </span>
             </div>
@@ -131,47 +189,17 @@
 
 <section class="content">
   <div class="container is-max-desktop">
-    <p style="text-align: center;"><img src="static/images/paper2code_diagrams-cropped.svg" alt="Image" width="100%" style="max-width: 8000px;" /></p>
-<p style="text-align: center;"><em>Figure 1: Overview of the Paper2Code benchmark and evaluation process</em></p>
+    <p style="text-align: center;"><img src="static/images/output_cropped.svg" alt="Image" width="100%" style="max-width: 8000px;" /></p>
+<!-- *Figure 1: Overview of the  evaluation process* -->
+<p style="text-align: center;"><strong>ResearchCodeBench</strong> <em>collects recently released research</em> <strong>papers</strong> <em>and their corresponding</em> <strong>code</strong> <em>repository to construct a benchmark for evaluating code LLMs on research code generation.</em></p>
 
 <h1 id="introduction">Introduction</h1>
 
-<p>Large language models (LLMs) have demonstrated significant promise in machine learning research; however, their ability to implement genuinely novel ideas from recent academic papers remains uncertain. To address this gap, we introduce Paper2Code, a coding benchmark designed to evaluate LLMs on their capability to translate concepts from top-tier conference papers into executable code.</p>
+<p>ResearchCodeBench is a rigorous benchmark for evaluating LLMs on their ability to translate novel machine learning research papers into executable code. It is built from 212 real-world coding challenges sourced directly from top ML papers published in 2024–2025 and continues to grow through ongoing community contributions. We evaluate over 30 proprietary and open-source models and find that even the best-performing LLMs solve fewer than 40% of the challenges. In addition to performance scores, ResearchCodeBench presents novel empirical findings not captured by prior benchmarks.</p>
 
-<p>To this end, we introduce Paper2Code-bench, an evaluation benchmark consisting of 1,000 coding challenges with varying levels of difficulty. These challenges have been curated from 20 recent machine learning papers accepted at top ML conferences or recent arXiv submissions from the past year, with 80% of the papers published within the last six months. For each challenge, the LLM is provided with the original research paper and a scaffold of its corresponding codebase. The model is then tasked with implementing the core contributions described in the paper. Each solution is rigorously evaluated using comprehensive tests against the original code written by the authors.</p>
+<h1 id="contamination">Contamination</h1>
 
-<h2 id="comparison-with-paperbench">Comparison with PaperBench</h2>
-
-<p>While both Paper2Code-bench and PaperBench aim to evaluate language models’ capabilities in understanding research papers, they differ significantly in their objectives and evaluation methodologies. Paper2Code-bench focuses specifically on implementing novel machine learning algorithms and architectures from research papers, requiring models to demonstrate both deep understanding of technical concepts and practical coding abilities.</p>
-
-<p>Key differences include:</p>
-<ul>
-  <li>Focus on implementation rather than just comprehension</li>
-  <li>Rigorous evaluation through unit tests and code functionality</li>
-  <li>Emphasis on recent (&lt; 6 months) machine learning research</li>
-  <li>Structured code scaffolding to standardize evaluation</li>
-</ul>
-
-<p><img src="static/images/pyramid.svg" alt="Pyramid" /></p>
-
-<h2 id="papers-included-in-the-benchmark">Papers Included in the Benchmark</h2>
-
-<p>Our benchmark includes 20 carefully selected papers from top machine learning conferences and recent arXiv submissions. Each paper introduces novel algorithms or architectures that represent significant advances in the field.</p>
-
-<p><img src="static/images/code_commits_vs_llm_cutoffs.png" alt="knowledge_cutoff" />
-<img src="static/images/ranking.png" alt="ranking" /></p>
-
-<p><img src="static/images/paper_context.png" alt="context" /></p>
-
-<h2 id="toward-ai-research-agents">Toward AI Research Agents</h2>
-
-<p>Our benchmark contributes to the broader goal of developing AI Research Agents capable of advancing scientific knowledge. We view the ability to implement novel research from papers as a critical stepping stone toward more sophisticated research capabilities.</p>
-
-<p>The progression moves from basic reproduction to groundbreaking scientific contributions. Paper2Code-bench focuses on function reproduction, which requires models to understand and implement specific methods and algorithms described in research papers.</p>
-
-<p>As models improve on this benchmark, we expect to see progress toward enabling AI systems that can assist researchers not just in implementing ideas but in developing and refining novel approaches to challenging problems in AI and beyond.</p>
-
-<h1 id="help-us-grow-paper2code-bench">Help Us Grow Paper2Code-bench!</h1>
+<h1 id="help-us-grow-researchcodebench">Help Us Grow ResearchCodeBench!</h1>
 
 <p>We’re looking for recent ML papers with available code to add to our benchmark. Paper2Code-bench is continuously evolving, and we welcome contributions from the research community to expand our collection of papers and implementation challenges.</p>
 
@@ -286,11 +314,11 @@
 <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>@article{paper2code2025,
-    author    = {Paper2Code Team},
-    title     = {Paper2Code-bench: Evaluating Large Language Models' Ability to Implement Novel Machine Learning Research},
+      <pre><code>@article{researchcodebench2025,
+    author    = {ResearchCodeBench Team},
+    title     = {ResearchCodeBench: Benchmarking LLMs on Implementing Novel Machine Learning Research Code},
     year      = {2025},
-    url       = {https://paper2code-bench.github.io}
+    url       = {https://researchcodebench.github.io}
   }</code></pre>
     </div>
   </section>

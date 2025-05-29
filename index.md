@@ -3,53 +3,28 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: main
-title: "Paper2Code-bench: Evaluating Large Language Models' Ability to Implement Novel Machine Learning Research"
+title: "ResearchCodeBench: Benchmarking LLMs on Implementing Novel Machine Learning Research Code"
 ---
 
-![Image](static/images/paper2code_diagrams-cropped.svg){:width="100%" style="max-width: 8000px;"}
+![Image](static/images/output_cropped.svg){:width="100%" style="max-width: 8000px;"}
 {:style="text-align: center;"}
-*Figure 1: Overview of the Paper2Code benchmark and evaluation process*
+<!-- *Figure 1: Overview of the  evaluation process* -->
+**ResearchCodeBench** *collects recently released research* **papers** *and their corresponding* **code** *repository to construct a benchmark for evaluating code LLMs on research code generation.*
 {:style="text-align: center;"}
 
 # Introduction
 
-Large language models (LLMs) have demonstrated significant promise in machine learning research; however, their ability to implement genuinely novel ideas from recent academic papers remains uncertain. To address this gap, we introduce Paper2Code, a coding benchmark designed to evaluate LLMs on their capability to translate concepts from top-tier conference papers into executable code.
+ResearchCodeBench is a rigorous benchmark for evaluating LLMs on their ability to translate novel machine learning research papers into executable code. It is built from 212 real-world coding challenges sourced directly from top ML papers published in 2024–2025 and continues to grow through ongoing community contributions. We evaluate over 30 proprietary and open-source models and find that even the best-performing LLMs solve fewer than 40% of the challenges. In addition to performance scores, ResearchCodeBench presents novel empirical findings not captured by prior benchmarks.
 
-To this end, we introduce Paper2Code-bench, an evaluation benchmark consisting of 1,000 coding challenges with varying levels of difficulty. These challenges have been curated from 20 recent machine learning papers accepted at top ML conferences or recent arXiv submissions from the past year, with 80% of the papers published within the last six months. For each challenge, the LLM is provided with the original research paper and a scaffold of its corresponding codebase. The model is then tasked with implementing the core contributions described in the paper. Each solution is rigorously evaluated using comprehensive tests against the original code written by the authors.
 
-## Comparison with PaperBench
-
-While both Paper2Code-bench and PaperBench aim to evaluate language models' capabilities in understanding research papers, they differ significantly in their objectives and evaluation methodologies. Paper2Code-bench focuses specifically on implementing novel machine learning algorithms and architectures from research papers, requiring models to demonstrate both deep understanding of technical concepts and practical coding abilities.
-
-Key differences include:
-- Focus on implementation rather than just comprehension
-- Rigorous evaluation through unit tests and code functionality
-- Emphasis on recent (< 6 months) machine learning research
-- Structured code scaffolding to standardize evaluation
-
-![Pyramid](static/images/pyramid.svg)
-
-## Papers Included in the Benchmark
-
-Our benchmark includes 20 carefully selected papers from top machine learning conferences and recent arXiv submissions. Each paper introduces novel algorithms or architectures that represent significant advances in the field.
-
-![knowledge_cutoff](static/images/code_commits_vs_llm_cutoffs.png)
-![ranking](static/images/ranking.png)
-
-![context](static/images/paper_context.png)
-
-## Toward AI Research Agents
-
-Our benchmark contributes to the broader goal of developing AI Research Agents capable of advancing scientific knowledge. We view the ability to implement novel research from papers as a critical stepping stone toward more sophisticated research capabilities.
-
-The progression moves from basic reproduction to groundbreaking scientific contributions. Paper2Code-bench focuses on function reproduction, which requires models to understand and implement specific methods and algorithms described in research papers.
-
-As models improve on this benchmark, we expect to see progress toward enabling AI systems that can assist researchers not just in implementing ideas but in developing and refining novel approaches to challenging problems in AI and beyond.
+# Contamination
 
 
 
 
-# Help Us Grow Paper2Code-bench!
+
+
+# Help Us Grow ResearchCodeBench!
 
 We're looking for recent ML papers with available code to add to our benchmark. Paper2Code-bench is continuously evolving, and we welcome contributions from the research community to expand our collection of papers and implementation challenges.
 
