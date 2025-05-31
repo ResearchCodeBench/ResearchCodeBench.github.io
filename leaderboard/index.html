@@ -155,7 +155,7 @@
                         <tr>
                             <th style="width: 60px">Rank</th>
                             <th style="width: 200px">Model</th>
-                            <th style="width: 100px">Company</th>
+                            <th style="width: 100px">Developer</th>
                             <th style="width: 250px">Overall Score</th>
                             <th style="width: 120px">Knowledge Cutoff</th>
                             <th style="width: 150px">Cost (per 1M tokens)</th>
@@ -168,7 +168,7 @@
                 const modelScores = Object.entries(data.overall_scores).map(([modelName, modelData]) => ({
                     name: modelData.llm_cfg.pretty_name,
                     score: modelData.line_rates.mean,
-                    company: modelData.llm_cfg.company,
+                    developer: modelData.llm_cfg.developer,
                     knowledgeCutoff: modelData.llm_cfg.knowledge_cutoff_date,
                     inputCost: modelData.llm_cfg.input_cost,
                     outputCost: modelData.llm_cfg.output_cost,
@@ -190,7 +190,7 @@
                                 ${model.model || ''}
                             </div>
                         </td>
-                        <td><span class="company-badge">${model.company}</span></td>
+                        <td><span class="company-badge">${model.developer}</span></td>
                         <td>
                             <div class="score-bar">
                                 <div class="score-fill" style="width: ${model.score}%"></div>
