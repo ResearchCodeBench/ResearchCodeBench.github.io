@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.css">
     <style>
         body {
             font-family: "Google Sans", "Noto Sans", sans-serif;
@@ -50,6 +51,105 @@
         .link-block {
             margin: 0 0.5rem;
         }
+
+        .date-filter {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .date-filter h4 {
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .date-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #666;
+            padding: 0 4px;
+        }
+
+        #date-slider {
+            margin: 0.5rem 0;
+            width: 100%;
+        }
+
+        .noUi-base {
+            height: 8px;
+        }
+
+        .noUi-connect {
+            background: #4caf50;
+        }
+
+        .noUi-handle {
+            border: 1px solid #4caf50;
+            background: #fff;
+            cursor: pointer;
+            width: 16px !important;
+            height: 16px !important;
+            right: -8px !important;
+            top: -4px !important;
+        }
+
+        .noUi-handle:before,
+        .noUi-handle:after {
+            background: #4caf50;
+            width: 8px;
+            height: 1px;
+            left: 3px;
+        }
+
+        .noUi-handle:after {
+            left: 3px;
+        }
+
+        .noUi-marker {
+            background: #666;
+            transition: all 0.2s ease;
+        }
+
+        .noUi-marker-horizontal {
+            height: 12px;
+            width: 3px;
+            margin-left: -1.5px;
+        }
+
+        .noUi-marker:hover {
+            background: #4caf50;
+            height: 16px !important;
+            width: 4px !important;
+            margin-left: -2px !important;
+        }
+
+        .noUi-marker::after {
+            content: attr(data-title);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            margin-top: 8px;
+        }
+
+        .noUi-marker:hover::after {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -66,78 +166,164 @@
                 </a>
             </span>
         </div>
+        <div class="date-filter">
+            <h4>Filter Papers by First Commit Date</h4>
+            <div id="date-slider"></div>
+            <div class="date-values">
+                <span id="date-min"></span>
+                <span id="date-max"></span>
+            </div>
+        </div>
         <div id="leaderboard"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.js"></script>
     <script>
+        let allPapers = [];
+        let dateSlider;
+
+        function formatDate(date) {
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+        }
+
+        function initializeDateSlider(minDate, maxDate) {
+            const slider = document.getElementById('date-slider');
+            const paperDates = allPapers.map(paper => ({
+                value: new Date(paper.paper_metadata.first_commit_date).getTime(),
+                label: paper.paper_metadata.title
+            }));
+
+            dateSlider = noUiSlider.create(slider, {
+                start: [minDate.getTime(), maxDate.getTime()],
+                connect: true,
+                range: {
+                    'min': minDate.getTime(),
+                    'max': maxDate.getTime()
+                },
+                format: {
+                    to: value => formatDate(new Date(value)),
+                    from: value => value
+                },
+                pips: {
+                    mode: 'values',
+                    values: paperDates.map(d => d.value),
+                    density: 100,
+                    format: {
+                        to: value => ''
+                    }
+                }
+            });
+
+            // Add tooltips to markers
+            document.querySelectorAll('.noUi-marker').forEach((marker, index) => {
+                if (index < paperDates.length) {
+                    marker.setAttribute('data-title', paperDates[index].label);
+                }
+            });
+
+            dateSlider.on('update', function (values, handle) {
+                document.getElementById(handle ? 'date-max' : 'date-min').textContent = values[handle];
+                filterPapers();
+            });
+        }
+
+        function filterPapers() {
+            const [minDate, maxDate] = dateSlider.get();
+            const filteredPapers = allPapers.filter(paper => {
+                const commitDate = new Date(paper.paper_metadata.first_commit_date);
+                return commitDate >= new Date(minDate) && commitDate <= new Date(maxDate);
+            });
+            updateLeaderboard(filteredPapers);
+        }
+
+        function updateLeaderboard(papers) {
+            const leaderboard = document.getElementById('leaderboard');
+            leaderboard.innerHTML = '';
+
+            papers.forEach(paperData => {
+                const paperDiv = document.createElement('div');
+                paperDiv.className = 'card mb-4';
+
+                // Paper header
+                const paperHeader = document.createElement('div');
+                paperHeader.className = 'card-header';
+                paperHeader.innerHTML = `
+                    <h3>${paperData.paper_metadata.title}</h3>
+                    <p class="mb-0">
+                        <a href="${paperData.paper_metadata.arxiv_abs}" target="_blank">arXiv</a> | 
+                        <a href="${paperData.paper_metadata.github_url}" target="_blank">GitHub</a>
+                    </p>
+                `;
+                paperDiv.appendChild(paperHeader);
+
+                // Create table
+                const table = document.createElement('table');
+                table.className = 'table table-striped';
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Pass Rate</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                `;
+
+                // Fetch scores for all models
+                const modelScores = Object.entries(paperData.problem_scores).map(([modelName, scoreData]) => ({
+                    modelName: paperData.overallScores[modelName]?.llm_cfg?.pretty_name || modelName,
+                    passRate: scoreData.mean
+                }));
+
+                // Sort models by score in descending order
+                modelScores.sort((a, b) => b.passRate - a.passRate);
+
+                // Add sorted models to table
+                const tbody = table.querySelector('tbody');
+                modelScores.forEach((model, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${model.modelName}</td>
+                        <td>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: ${model.passRate}%"></div>
+                            </div>
+                        </td>
+                        <td>${model.passRate.toFixed(1)}%</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                paperDiv.appendChild(table);
+                leaderboard.appendChild(paperDiv);
+            });
+        }
+
         fetch('../data/overall_stats.json')
             .then(response => response.json())
             .then(data => {
-                const leaderboard = document.getElementById('leaderboard');
                 const results = data.results;
                 const overallScores = data.overall_scores;
 
-                // Process each paper's results
-                Object.entries(results).forEach(([paperId, paperData]) => {
-                    const paperDiv = document.createElement('div');
-                    paperDiv.className = 'card mb-4';
+                // Process papers and store them with their overall scores
+                allPapers = Object.entries(results).map(([paperId, paperData]) => ({
+                    ...paperData,
+                    overallScores
+                }));
 
-                    // Paper header
-                    const paperHeader = document.createElement('div');
-                    paperHeader.className = 'card-header';
-                    paperHeader.innerHTML = `
-                        <h3>${paperData.paper_metadata.title}</h3>
-                        <p class="mb-0">
-                            <a href="${paperData.paper_metadata.arxiv_abs}" target="_blank">arXiv</a> | 
-                            <a href="${paperData.paper_metadata.github_url}" target="_blank">GitHub</a>
-                        </p>
-                    `;
-                    paperDiv.appendChild(paperHeader);
+                // Find min and max dates
+                const dates = allPapers.map(paper => new Date(paper.paper_metadata.first_commit_date));
+                const minDate = new Date(Math.min(...dates));
+                const maxDate = new Date(Math.max(...dates));
 
-                    // Create table
-                    const table = document.createElement('table');
-                    table.className = 'table table-striped';
-                    table.innerHTML = `
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Model</th>
-                                <th>Pass Rate</th>
-                                <th>Score</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    `;
+                // Initialize the date slider
+                initializeDateSlider(minDate, maxDate);
 
-                    // Fetch scores for all models
-                    const modelScores = Object.entries(paperData.problem_scores).map(([modelName, scoreData]) => ({
-                        modelName: overallScores[modelName]?.llm_cfg?.pretty_name || modelName,
-                        passRate: scoreData.mean
-                    }));
-
-                    // Sort models by score in descending order
-                    modelScores.sort((a, b) => b.passRate - a.passRate);
-
-                    // Add sorted models to table
-                    const tbody = table.querySelector('tbody');
-                    modelScores.forEach((model, index) => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${model.modelName}</td>
-                            <td>
-                                <div class="score-bar">
-                                    <div class="score-fill" style="width: ${model.passRate}%"></div>
-                                </div>
-                            </td>
-                            <td>${model.passRate.toFixed(1)}%</td>
-                        `;
-                        tbody.appendChild(row);
-                    });
-
-                    paperDiv.appendChild(table);
-                    leaderboard.appendChild(paperDiv);
-                });
+                // Initial render
+                updateLeaderboard(allPapers);
             })
             .catch(error => {
                 console.error('Error loading data:', error);
