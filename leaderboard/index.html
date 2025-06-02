@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paper2Code Leaderboard</title>
+    <title>ResearchCodeBench Leaderboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -115,8 +115,16 @@
 
 <body>
     <div class="container">
-        <h1 class="text-center mb-4">Paper2Code Leaderboard</h1>
+        <h1 class="text-center mb-4">ResearchCodeBench Leaderboard</h1>
         <div class="text-center mb-4">
+            <span class="link-block">
+                <a href="../index.html" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fas fa-home"></i>
+                    </span>
+                    <span>Back To Home</span>
+                </a>
+            </span>
             <span class="link-block">
                 <a href="breakdown/index.html" class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
@@ -147,7 +155,7 @@
                         <tr>
                             <th style="width: 60px">Rank</th>
                             <th style="width: 200px">Model</th>
-                            <th style="width: 100px">Company</th>
+                            <th style="width: 100px">Developer</th>
                             <th style="width: 250px">Overall Score</th>
                             <th style="width: 120px">Knowledge Cutoff</th>
                             <th style="width: 150px">Cost (per 1M tokens)</th>
@@ -160,7 +168,7 @@
                 const modelScores = Object.entries(data.overall_scores).map(([modelName, modelData]) => ({
                     name: modelData.llm_cfg.pretty_name,
                     score: modelData.line_rates.mean,
-                    company: modelData.llm_cfg.company,
+                    developer: modelData.llm_cfg.developer,
                     knowledgeCutoff: modelData.llm_cfg.knowledge_cutoff_date,
                     inputCost: modelData.llm_cfg.input_cost,
                     outputCost: modelData.llm_cfg.output_cost,
@@ -182,7 +190,7 @@
                                 ${model.model || ''}
                             </div>
                         </td>
-                        <td><span class="company-badge">${model.company}</span></td>
+                        <td><span class="company-badge">${model.developer}</span></td>
                         <td>
                             <div class="score-bar">
                                 <div class="score-fill" style="width: ${model.score}%"></div>
