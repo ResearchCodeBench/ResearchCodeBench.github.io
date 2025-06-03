@@ -5,3 +5,4 @@ _site/
 output_frames/
 output_frames2/
 *.gif
+!animation.gif
