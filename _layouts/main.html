@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="Paper2Code: Measuring Language Models' Capacity to Implement Novel Machine Learning Research Ideas">
-  <meta name="keywords" content="Paper2Code, ML, LLM, Research">
+        content="ResearchCodeBench: Benchmarking LLMs on Implementing Novel Machine Learning Research Code">
+  <meta name="keywords" content="ResearchCodeBench, ML, LLM, Research">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Paper2Code: Measuring Language Models' Capacity to Implement Novel Machine Learning Research Ideas</title>
+  <title>ResearchCodeBench: Benchmarking LLMs on Implementing Novel Machine Learning Research Code</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
@@ -196,7 +196,7 @@
           <img src="static/images/paper2code_diagrams-cropped.svg" alt="Paper2Code Diagrams" style="object-fit: contain; width: 100%; max-height: 500px;">
         </figure>
         <p class="has-text-centered is-size-5" style="margin-top: 1rem;">
-          Figure 1: Overview of the Paper2Code benchmark and evaluation process
+          Figure 1: Overview of the ResearchCodeBench benchmark and evaluation process
         </p>
       </div>
     </div>
@@ -211,18 +211,48 @@
 <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>@article{researchcodebench2025,
+      <div style="position: relative;">
+        <pre><code id="bibtex-content">@article{researchcodebench2025,
     author    = {ResearchCodeBench Team},
     title     = {ResearchCodeBench: Benchmarking LLMs on Implementing Novel Machine Learning Research Code},
     year      = {2025},
     url       = {https://researchcodebench.github.io}
   }</code></pre>
+        <button id="copy-bibtex-btn" class="button is-small is-light" style="position: absolute; top: 10px; right: 10px;" onclick="copyBibtex()">
+          <span class="icon">
+            <i class="fas fa-copy"></i>
+          </span>
+          <span>Copy</span>
+        </button>
+      </div>
     </div>
   </section>
+
+  <script>
+    function copyBibtex() {
+      const bibtexContent = document.getElementById('bibtex-content').textContent;
+      navigator.clipboard.writeText(bibtexContent).then(function() {
+        const button = document.getElementById('copy-bibtex-btn');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<span class="icon"><i class="fas fa-check"></i></span><span>Copied!</span>';
+        button.classList.remove('is-light');
+        button.classList.add('is-success');
+        
+        setTimeout(function() {
+          button.innerHTML = originalText;
+          button.classList.remove('is-success');
+          button.classList.add('is-light');
+        }, 2000);
+      }).catch(function(err) {
+        console.error('Failed to copy text: ', err);
+      });
+    }
+  </script>
+
 <footer class="footer">
   <div class="container">
     <div class="content has-text-centered">
-      <a class="icon-link" href="https://github.com/paper2code-bench" class="external-link">
+      <a class="icon-link" href="https://github.com/researchcodebench" class="external-link">
         <i class="fab fa-github"></i>
       </a>
     </div>
@@ -236,7 +266,7 @@
           </p>
           <p>
             This means you are free to borrow the <a
-              href="https://github.com/paper2code-bench/paper2code-bench.github.io">source code</a> of this website,
+              href="https://github.com/researchcodebench/researchcodebench.github.io">source code</a> of this website,
             we just ask that you link back to this page in the footer.
             Please remember to remove the analytics code included in the header of the website which
             you do not want on your website.

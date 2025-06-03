@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="Paper2Code: Measuring Language Models' Capacity to Implement Novel Machine Learning Research Ideas">
-  <meta name="keywords" content="Paper2Code, ML, LLM, Research">
+        content="ResearchCodeBench: Benchmarking LLMs on Implementing Novel Machine Learning Research Code">
+  <meta name="keywords" content="ResearchCodeBench, ML, LLM, Research">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Paper2Code: Measuring Language Models' Capacity to Implement Novel Machine Learning Research Ideas</title>
+  <title>ResearchCodeBench: Benchmarking LLMs on Implementing Novel Machine Learning Research Code</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
@@ -196,7 +196,7 @@
           <img src="static/images/paper2code_diagrams-cropped.svg" alt="Paper2Code Diagrams" style="object-fit: contain; width: 100%; max-height: 500px;">
         </figure>
         <p class="has-text-centered is-size-5" style="margin-top: 1rem;">
-          Figure 1: Overview of the Paper2Code benchmark and evaluation process
+          Figure 1: Overview of the ResearchCodeBench benchmark and evaluation process
         </p>
       </div>
     </div>
@@ -205,7 +205,7 @@
 
 <section class="content">
   <div class="container is-max-desktop">
-    <p style="text-align: center;"><img src="static/images/output_cropped.svg" alt="Image" width="100%" style="max-width: 8000px;" /></p>
+    <p style="text-align: center;"><img src="static/images/animation.gif" alt="Image" width="100%" style="max-width: 8000px;" /></p>
 <!-- *Figure 1: Overview of the  evaluation process* -->
 <p style="text-align: center;"><strong>ResearchCodeBench</strong> <em>collects recently released research</em> <strong>papers</strong> <em>and their corresponding</em> <strong>code</strong> <em>repository to construct a benchmark for evaluating code LLMs on research code generation.</em></p>
 
@@ -214,7 +214,7 @@
 <p>ResearchCodeBench is a rigorous benchmark for evaluating LLMs on their ability to translate novel machine learning research papers into executable code. It is built from 212 real-world coding challenges sourced directly from top ML papers published in 2024–2025 and continues to grow through ongoing community contributions. We evaluate over 30 proprietary and open-source models and find that even the best-performing LLMs solve fewer than 40% of the challenges. In addition to performance scores, ResearchCodeBench presents novel empirical findings not captured by prior benchmarks.</p>
 
 <p style="text-align: center;"><img src="static/images/model_line_rates.svg" alt="Image" width="100%" style="max-width: 8000px;" /></p>
-<p><em>Pass@1* results of 32 LLMs on ResearchCodeBench with greedy decoding. Models from different companies are noted with different shades. Open models are wrapped with dotted lines. * Success rate is weighted by line of code of each answer</em></p>
+<p><em>Pass@1* results of 32 LLMs on ResearchCodeBench with greedy decoding. Models from different companies are noted with different shades. Open models are wrapped with dotted lines.</em>       (* Success rate is weighted by line of code of each answer)</p>
 
 <h1 id="contamination">Contamination</h1>
 
@@ -227,11 +227,11 @@
   </div>
 </div>
 
-<p><em>Left: Model knowledge cutoff dates (horizontal lines) vs. repository commit dates (stars). Red = first commit; green = last commit. Most first commits occur after model cutoffs, demonstrating minimal pretraining contamination. Right: Scaled Pass@1 on the full 20-paper benchmark vs. contamination-safe 13-paper subset. Points below the diagonal show performance declines on truly out-of-distribution tasks, confirming that model successes reflect generalization rather than memorized code.</em></p>
+<p><em>Left: Model knowledge cutoff dates (horizontal lines) vs. repository commit dates (stars). Red = first commit; green = last commit. Most first commits occur after model cutoffs, demonstrating minimal pretraining contamination. Right: Scaled Pass@1 on the full 20-paper benchmark vs. contamination-safe 13-paper subset. Points below the diagonal show performance declines on truly out-of-distribution tasks.</em></p>
 
 <p><br />
 <!-- [TODO] Write a paragraph that concisely demonstrates our discovery on contamination. -->
-To quantify the risk of pretraining contamination, we compared each model’s documented knowledge cutoff date against the first and last commit dates of the 20 code repositories underlying our benchmark tasks. As shown in the left panel, horizontal lines mark the most recent cutoff for each model family, while red stars indicate the date of the first commit and green stars the last commit of each repo. Thirteen of the twenty repositories began after the latest known model cutoff (January 2025), and none predate December 2023—strong evidence that the majority of tasks were unseen during pretraining. In the right panel, we plot each model’s Scaled Pass@1 on the full benchmark versus the contamination-safe subset (the 13 papers whose repos postdate all cutoffs). All models suffer a consistent drop below the diagonal, confirming that high scores on the full set cannot be explained by memorization alone but instead reflect genuine generalization to novel code.</p>
+To quantify the risk of pretraining contamination, we compared each model’s documented knowledge cutoff date against the first and last commit dates of the 20 code repositories underlying our benchmark tasks. As shown in the left panel, horizontal lines mark the most recent cutoff for each model family, while red stars indicate the date of the first commit and green stars the last commit of each repo. Thirteen of the twenty repositories began after the latest known model cutoff (January 2025), and none predate December 2023—strong evidence that the majority of tasks were unseen during pretraining. In the right panel, we plot each model’s Scaled Pass@1 on the full benchmark versus the contamination-safe subset (the 13 papers whose repos postdate all cutoffs). All models suffer a consistent drop below the diagonal.</p>
 
 <p><br /></p>
 <h1 id="paper-ablation">Paper Ablation</h1>
@@ -243,7 +243,7 @@ To quantify the risk of pretraining contamination, we compared each model’s do
     <img src="/static/images/snippet_paper_impact_scatter.svg" style="width: 100%; height: 500px; object-fit: contain;" alt="Code Commits vs LLM Cutoffs" />
   </div>
 </div>
-<p>To isolate how much the original research paper aids code synthesis, we ran an ablation comparing Scaled Pass@1 with and without the paper in context. In the left panel, we plot absolute gains for each model: top performers like Gemini-2.5-Pro and O3 (High) see up to a 30 percentage-point boost when given the full paper, whereas smaller models show negligible or even negative changes—suggesting they either can’t leverage or are distracted by the long document. The right panel is a per-task scatter: each point’s x-coordinate is the success rate with paper, y-coordinate is without. Points above the diagonal denote tasks that only succeed when the paper is provided, highlighting cases where semantic understanding of the novel algorithm is essential.</p>
+<p>When evaluating the code completion task, we provide the model with the full text of the corresponding research paper. To isolate how much the original research paper aids code synthesis, we ran an ablation comparing Scaled Pass@1 with and without the paper in context. In the left panel, we plot absolute gains for each model: top performers like Gemini-2.5-Pro and O3 (High) see up to a 30 percentage-point boost when given the full paper, whereas smaller models show negligible or even negative changes—suggesting they either can’t leverage or are distracted by the long document. The right panel is a per-task scatter: each point’s x-coordinate is the success rate with paper, y-coordinate is without. Points above the diagonal denote tasks that only succeed when the paper is provided, highlighting cases where semantic understanding of the novel algorithm is essential.</p>
 
 
   </div>
@@ -251,18 +251,48 @@ To quantify the risk of pretraining contamination, we compared each model’s do
 <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>@article{researchcodebench2025,
+      <div style="position: relative;">
+        <pre><code id="bibtex-content">@article{researchcodebench2025,
     author    = {ResearchCodeBench Team},
     title     = {ResearchCodeBench: Benchmarking LLMs on Implementing Novel Machine Learning Research Code},
     year      = {2025},
     url       = {https://researchcodebench.github.io}
   }</code></pre>
+        <button id="copy-bibtex-btn" class="button is-small is-light" style="position: absolute; top: 10px; right: 10px;" onclick="copyBibtex()">
+          <span class="icon">
+            <i class="fas fa-copy"></i>
+          </span>
+          <span>Copy</span>
+        </button>
+      </div>
     </div>
   </section>
+
+  <script>
+    function copyBibtex() {
+      const bibtexContent = document.getElementById('bibtex-content').textContent;
+      navigator.clipboard.writeText(bibtexContent).then(function() {
+        const button = document.getElementById('copy-bibtex-btn');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<span class="icon"><i class="fas fa-check"></i></span><span>Copied!</span>';
+        button.classList.remove('is-light');
+        button.classList.add('is-success');
+        
+        setTimeout(function() {
+          button.innerHTML = originalText;
+          button.classList.remove('is-success');
+          button.classList.add('is-light');
+        }, 2000);
+      }).catch(function(err) {
+        console.error('Failed to copy text: ', err);
+      });
+    }
+  </script>
+
 <footer class="footer">
   <div class="container">
     <div class="content has-text-centered">
-      <a class="icon-link" href="https://github.com/paper2code-bench" class="external-link">
+      <a class="icon-link" href="https://github.com/researchcodebench" class="external-link">
         <i class="fab fa-github"></i>
       </a>
     </div>
@@ -276,7 +306,7 @@ To quantify the risk of pretraining contamination, we compared each model’s do
           </p>
           <p>
             This means you are free to borrow the <a
-              href="https://github.com/paper2code-bench/paper2code-bench.github.io">source code</a> of this website,
+              href="https://github.com/researchcodebench/researchcodebench.github.io">source code</a> of this website,
             we just ask that you link back to this page in the footer.
             Please remember to remove the analytics code included in the header of the website which
             you do not want on your website.

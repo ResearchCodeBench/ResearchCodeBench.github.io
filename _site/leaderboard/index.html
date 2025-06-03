@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paper2Code Leaderboard</title>
+    <title>ResearchCodeBench Leaderboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.css">
     <style>
         body {
             font-family: "Google Sans", "Noto Sans", sans-serif;
@@ -110,13 +111,120 @@
         .link-block {
             margin: 0 0.5rem;
         }
+
+        .date-filter {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .date-filter h4 {
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .date-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #666;
+            padding: 0 4px;
+        }
+
+        #date-slider {
+            margin: 0.5rem 0;
+            width: 100%;
+        }
+
+        .noUi-base {
+            height: 8px;
+        }
+
+        .noUi-connect {
+            background: #4caf50;
+        }
+
+        .noUi-handle {
+            border: 1px solid #4caf50;
+            background: #fff;
+            cursor: pointer;
+            width: 16px !important;
+            height: 16px !important;
+            right: -8px !important;
+            top: -4px !important;
+        }
+
+        .noUi-handle:before,
+        .noUi-handle:after {
+            background: #4caf50;
+            width: 8px;
+            height: 1px;
+            left: 3px;
+        }
+
+        .noUi-handle:after {
+            left: 3px;
+        }
+
+        .noUi-marker {
+            background: #666;
+            transition: all 0.2s ease;
+        }
+
+        .noUi-marker-horizontal {
+            height: 12px;
+            width: 3px;
+            margin-left: -1.5px;
+        }
+
+        .noUi-marker:hover {
+            background: #4caf50;
+            height: 16px !important;
+            width: 4px !important;
+            margin-left: -2px !important;
+        }
+
+        .noUi-marker::after {
+            content: attr(data-title);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            margin-top: 8px;
+        }
+
+        .noUi-marker:hover::after {
+            opacity: 1;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1 class="text-center mb-4">Paper2Code Leaderboard</h1>
+        <h1 class="text-center mb-4">ResearchCodeBench Leaderboard</h1>
         <div class="text-center mb-4">
+            <span class="link-block">
+                <a href="../index.html" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fas fa-home"></i>
+                    </span>
+                    <span>Back To Home</span>
+                </a>
+            </span>
             <span class="link-block">
                 <a href="breakdown/index.html" class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
@@ -126,77 +234,265 @@
                 </a>
             </span>
         </div>
+        <div class="date-filter">
+            <h4>Filter by Paper Commit Date Range</h4>
+            <div id="date-slider"></div>
+            <div class="date-values">
+                <span id="date-min"></span>
+                <span id="date-max"></span>
+            </div>
+        </div>
         <div id="leaderboard"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.js"></script>
     <script>
+        let allData = null;
+        let allPapers = [];
+        let dateSlider;
+
+        function formatDate(date) {
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+        }
+
+        function initializeDateSlider(minDate, maxDate) {
+            const slider = document.getElementById('date-slider');
+            const paperDates = allPapers.map(paper => ({
+                value: new Date(paper.paper_metadata.first_commit_date).getTime(),
+                label: paper.paper_metadata.title
+            }));
+
+            dateSlider = noUiSlider.create(slider, {
+                start: [minDate.getTime(), maxDate.getTime()],
+                connect: true,
+                range: {
+                    'min': minDate.getTime(),
+                    'max': maxDate.getTime()
+                },
+                format: {
+                    to: value => formatDate(new Date(value)),
+                    from: value => value
+                },
+                pips: {
+                    mode: 'values',
+                    values: paperDates.map(d => d.value),
+                    density: 100,
+                    format: {
+                        to: value => ''
+                    }
+                }
+            });
+
+            // Add tooltips to markers
+            document.querySelectorAll('.noUi-marker').forEach((marker, index) => {
+                if (index < paperDates.length) {
+                    marker.setAttribute('data-title', paperDates[index].label);
+                }
+            });
+
+            dateSlider.on('update', function (values, handle) {
+                document.getElementById(handle ? 'date-max' : 'date-min').textContent = values[handle];
+                filterAndUpdateLeaderboard();
+            });
+        }
+
+        function filterAndUpdateLeaderboard() {
+            const [minDate, maxDate] = dateSlider.get();
+            
+            // Filter papers by date range
+            const filteredPapers = allPapers.filter(paper => {
+                const commitDate = new Date(paper.paper_metadata.first_commit_date);
+                return commitDate >= new Date(minDate) && commitDate <= new Date(maxDate);
+            });
+
+            // Get paper IDs for filtering
+            const filteredPaperIds = new Set(Object.keys(allData.results).filter(paperId => {
+                const paper = allData.results[paperId];
+                const commitDate = new Date(paper.paper_metadata.first_commit_date);
+                return commitDate >= new Date(minDate) && commitDate <= new Date(maxDate);
+            }));
+
+            // Recalculate overall scores based on filtered papers using LoC weighting
+            const recalculatedScores = {};
+            
+            // For each model, calculate new overall score based on filtered papers
+            Object.entries(allData.overall_scores).forEach(([modelName, modelData]) => {
+                let totalWeightedScore = 0;
+                let totalLinesOfCode = 0;
+
+                // Calculate weighted score across all filtered papers
+                filteredPaperIds.forEach(paperId => {
+                    const paperData = allData.results[paperId];
+                    if (paperData.results && paperData.results[modelName]) {
+                        // Get individual problem results for this model in this paper
+                        const modelResults = paperData.results[modelName];
+                        
+                        // For each problem in this paper
+                        Object.entries(modelResults.results).forEach(([problemName, problemResults]) => {
+                            if (problemResults && problemResults.length > 0) {
+                                const result = problemResults[0]; // First completion
+                                const loc = result.snippet_code_line_count;
+                                // console.log(loc);
+                                const passed = result.passed;
+                                
+                                // Add to totals (weighted by LoC)
+                                totalLinesOfCode += loc;
+                                if (passed) {
+                                    totalWeightedScore += loc;
+                                }
+                            }
+                        });
+                    }
+                });
+
+                // Calculate weighted average (scaled pass rate)
+                const scaledPassRate = totalLinesOfCode > 0 ? (totalWeightedScore / totalLinesOfCode) * 100 : 0;
+
+                recalculatedScores[modelName] = {
+                    ...modelData,
+                    line_rates: {
+                        ...modelData.line_rates,
+                        mean: scaledPassRate
+                    }
+                };
+            });
+
+            updateLeaderboard(recalculatedScores);
+        }
+
+        function updateLeaderboard(overallScores) {
+            const leaderboard = document.getElementById('leaderboard');
+            leaderboard.innerHTML = '';
+
+            // Create responsive wrapper
+            const tableWrapper = document.createElement('div');
+            tableWrapper.className = 'table-responsive';
+
+            // Create table
+            const table = document.createElement('table');
+            table.className = 'table table-striped';
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th style="width: 60px">Rank</th>
+                        <th style="width: 200px">Model</th>
+                        <th style="width: 100px">Developer</th>
+                        <th style="width: 250px">Overall Score</th>
+                        <th style="width: 120px">Knowledge Cutoff</th>
+                        <th style="width: 150px">Cost (per 1M tokens)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            `;
+
+            // Get overall scores and sort them
+            const modelScores = Object.entries(overallScores).map(([modelName, modelData]) => ({
+                name: modelData.llm_cfg.pretty_name,
+                score: modelData.line_rates.mean,
+                developer: modelData.llm_cfg.developer,
+                knowledgeCutoff: modelData.llm_cfg.knowledge_cutoff_date,
+                inputCost: modelData.llm_cfg.input_cost,
+                outputCost: modelData.llm_cfg.output_cost,
+                model: modelData.llm_cfg.model
+            }));
+
+            // Sort by score in descending order
+            modelScores.sort((a, b) => b.score - a.score);
+
+            // Add models to table
+            const tbody = table.querySelector('tbody');
+            modelScores.forEach((model, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>
+                        ${model.name}
+                        <div class="model-info">
+                            ${model.model || ''}
+                        </div>
+                    </td>
+                    <td><span class="company-badge">${model.developer}</span></td>
+                    <td>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: ${model.score}%"></div>
+                        </div>
+                        <div class="mt-1">${model.score.toFixed(1)}%</div>
+                    </td>
+                    <td>${model.knowledgeCutoff}</td>
+                    <td>$${model.inputCost}/$${model.outputCost}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            tableWrapper.appendChild(table);
+            leaderboard.appendChild(tableWrapper);
+        }
+
         fetch('data/overall_stats.json')
             .then(response => response.json())
             .then(data => {
-                const leaderboard = document.getElementById('leaderboard');
-
-                // Create responsive wrapper
-                const tableWrapper = document.createElement('div');
-                tableWrapper.className = 'table-responsive';
-
-                // Create table
-                const table = document.createElement('table');
-                table.className = 'table table-striped';
-                table.innerHTML = `
-                    <thead>
-                        <tr>
-                            <th style="width: 60px">Rank</th>
-                            <th style="width: 200px">Model</th>
-                            <th style="width: 100px">Company</th>
-                            <th style="width: 250px">Overall Score</th>
-                            <th style="width: 120px">Knowledge Cutoff</th>
-                            <th style="width: 150px">Cost (per 1M tokens)</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                `;
-
-                // Get overall scores and sort them
-                const modelScores = Object.entries(data.overall_scores).map(([modelName, modelData]) => ({
-                    name: modelData.llm_cfg.pretty_name,
-                    score: modelData.line_rates.mean,
-                    company: modelData.llm_cfg.company,
-                    knowledgeCutoff: modelData.llm_cfg.knowledge_cutoff_date,
-                    inputCost: modelData.llm_cfg.input_cost,
-                    outputCost: modelData.llm_cfg.output_cost,
-                    model: modelData.llm_cfg.model
+                allData = data;
+                
+                // Process papers for date filtering
+                allPapers = Object.entries(data.results).map(([paperId, paperData]) => ({
+                    id: paperId,
+                    ...paperData
                 }));
 
-                // Sort by score in descending order
-                modelScores.sort((a, b) => b.score - a.score);
+                // Recalculate overall scores using LoC weighting for all papers
+                const weightedOverallScores = {};
+                Object.entries(data.overall_scores).forEach(([modelName, modelData]) => {
+                    let totalWeightedScore = 0;
+                    let totalLinesOfCode = 0;
 
-                // Add models to table
-                const tbody = table.querySelector('tbody');
-                modelScores.forEach((model, index) => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>
-                            ${model.name}
-                            <div class="model-info">
-                                ${model.model || ''}
-                            </div>
-                        </td>
-                        <td><span class="company-badge">${model.company}</span></td>
-                        <td>
-                            <div class="score-bar">
-                                <div class="score-fill" style="width: ${model.score}%"></div>
-                            </div>
-                            <div class="mt-1">${model.score.toFixed(1)}%</div>
-                        </td>
-                        <td>${model.knowledgeCutoff}</td>
-                        <td>$${model.inputCost}/$${model.outputCost}</td>
-                    `;
-                    tbody.appendChild(row);
+                    // Calculate weighted score across all papers
+                    Object.entries(data.results).forEach(([paperId, paperData]) => {
+                        if (paperData.results && paperData.results[modelName]) {
+                            // Get individual problem results for this model in this paper
+                            const modelResults = paperData.results[modelName];
+                            
+                            // For each problem in this paper
+                            Object.entries(modelResults.results).forEach(([problemName, problemResults]) => {
+                                if (problemResults && problemResults.length > 0) {
+                                    const result = problemResults[0]; // First completion
+                                    const loc = result.snippet_code_line_count;
+                                    const passed = result.passed;
+                                    
+                                    // Add to totals (weighted by LoC)
+                                    totalLinesOfCode += loc;
+                                    if (passed) {
+                                        totalWeightedScore += loc;
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    // Calculate weighted average (scaled pass rate)
+                    const scaledPassRate = totalLinesOfCode > 0 ? (totalWeightedScore / totalLinesOfCode) * 100 : 0;
+
+                    weightedOverallScores[modelName] = {
+                        ...modelData,
+                        line_rates: {
+                            ...modelData.line_rates,
+                            mean: scaledPassRate
+                        }
+                    };
                 });
 
-                tableWrapper.appendChild(table);
-                leaderboard.appendChild(tableWrapper);
+                // Update allData with weighted scores
+                allData.overall_scores = weightedOverallScores;
+
+                // Find min and max dates
+                const dates = allPapers.map(paper => new Date(paper.paper_metadata.first_commit_date));
+                const minDate = new Date(Math.min(...dates));
+                const maxDate = new Date(Math.max(...dates));
+
+                // Initialize the date slider
+                initializeDateSlider(minDate, maxDate);
+
+                // Initial render with weighted scores
+                updateLeaderboard(weightedOverallScores);
             })
             .catch(error => {
                 console.error('Error loading data:', error);
