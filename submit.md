@@ -1,6 +1,7 @@
 ---
 layout: submit
 title: "Contribute to ResearchCodeBench"
+permalink: /submit/
 ---
 
 # Help Us Grow ResearchCodeBench!
